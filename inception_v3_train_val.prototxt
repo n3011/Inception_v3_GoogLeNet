@@ -15,10 +15,10 @@ layer {
   transform_param {
     mirror: true
     crop_size: 128
-    mean_file: "/home/haloi/Data/lmdb/Test_fold_is_0/mean.binaryproto"
+    mean_file: "path/to/mean.binaryproto"
   }
   data_param {
-    source: "/home/haloi/Data/lmdb/Test_fold_is_0/age_train_lmdb"
+    source: "path/to/train_lmdb"
     batch_size: 32
     backend: LMDB
   }
@@ -34,10 +34,10 @@ layer {
   transform_param {
     mirror: false
     crop_size: 128
-    mean_file: "/home/haloi/Data/lmdb/Test_fold_is_0/mean.binaryproto"
+    mean_file: "path/to/mean.binaryproto"
   }
   data_param {
-    source: "/home/haloi/Data/lmdb/Test_fold_is_0/age_val_lmdb"
+    source: "/path/to/val_lmdb"
     batch_size: 50
     backend: LMDB
   }
