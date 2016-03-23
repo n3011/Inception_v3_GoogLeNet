@@ -1,4 +1,6 @@
 # Inception_v3_GoogLeNet
+Implementation of Inception v3 in Caffe
+
 Training and testing prototxt for Google Inception_v3 New Model
 
 Network architecture was presented in :
