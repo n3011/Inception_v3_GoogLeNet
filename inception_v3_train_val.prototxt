@@ -15,12 +15,12 @@ layer {
   }
   transform_param {
     mirror: true
-    crop_size: 128
+    crop_size: 224
     mean_file: "path/to/mean.binaryproto"
   }
   data_param {
     source: "path/to/train_lmdb"
-    batch_size: 32
+    batch_size: 64
     backend: LMDB
   }
 }
@@ -34,12 +34,12 @@ layer {
   }
   transform_param {
     mirror: false
-    crop_size: 128
+    crop_size: 224
     mean_file: "path/to/mean.binaryproto"
   }
   data_param {
     source: "/path/to/val_lmdb"
-    batch_size: 50
+    batch_size: 64
     backend: LMDB
   }
 }
@@ -91,6 +91,7 @@ layer {
     phase: TRAIN
   }
 }
+
 layer {
    name: "bn1"
    type: "BatchNorm"
@@ -112,6 +113,34 @@ layer {
     phase: TEST
   }
 }
+layer {
+  name: "conv1/3x3_s1_scale"
+  type: "Scale"
+  bottom: "bn1"
+  top: "bn1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+
 layer {
   bottom: "bn1"
   top: "bn1"
@@ -196,6 +225,33 @@ layer {
   }
 }
 layer {
+  name: "conv2/3x3_s1_scale"
+  type: "Scale"
+  bottom: "bn2"
+  top: "bn2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn2"
   top: "bn2"
   name: "prelu1_2"
@@ -276,6 +332,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "conv3/3x3_s1_scale"
+  type: "Scale"
+  bottom: "bn3"
+  top: "bn3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -375,6 +458,33 @@ layer {
   }
 }
 layer {
+  name: "conv4/3x3_s1_scale"
+  type: "Scale"
+  bottom: "bn4"
+  top: "bn4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn4"
   top: "bn4"
   name: "prelu1_4"
@@ -458,6 +568,33 @@ layer {
   }
 }
 layer {
+  name: "conv5/3x3_s2_scale"
+  type: "Scale"
+  bottom: "bn5"
+  top: "bn5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn5"
   top: "bn5"
   name: "prelu1_5"
@@ -487,7 +624,7 @@ layer {
      num_output: 32
      pad: 1
      kernel_size: 3
-     stride: 1
+     stride: 2
      weight_filler{
        type: "xavier"
     }
@@ -538,6 +675,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "conv6/3x3_s1_scale"
+  type: "Scale"
+  bottom: "bn6"
+  top: "bn6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -626,6 +790,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3a_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a/1x1"
+  top: "bn_inception_3a/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3a/1x1"
   top: "bn_inception_3a/1x1"
   name: "prelu1_bn_inception_3a"
@@ -704,6 +895,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3a_3x3reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a_3x3reduce"
+  top: "bn_inception_3a_3x3reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -788,6 +1006,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3a/3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a/3x3"
+  top: "bn_inception_3a/3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3a/3x3"
   top: "bn_inception_3a/3x3"
   name: "prelu1_bn_inception_3a/3x3"
@@ -865,6 +1110,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3a/3x3x2_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a/3x3x2"
+  top: "bn_inception_3a/3x3x2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -949,6 +1221,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3a/3x3x2_1_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a/3x3x2_1"
+  top: "bn_inception_3a/3x3x2_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3a/3x3x2_1"
   top: "bn_inception_3a/3x3x2_1"
   name: "prelu1_bn_inception_3a/3x3x2_1"
@@ -1028,6 +1327,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3a/3x3x2_2_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a/3x3x2_2"
+  top: "bn_inception_3a/3x3x2_2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1122,6 +1448,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3a/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_3a/pool_proj"
+  top: "bn_inception_3a/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1221,6 +1574,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3b/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b/1x1"
+  top: "bn_inception_3b/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3b/1x1"
   top: "bn_inception_3b/1x1"
   name: "prelu1_bn_inception_3b"
@@ -1299,6 +1679,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3b_3x3reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b_3x3reduce"
+  top: "bn_inception_3b_3x3reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1383,6 +1790,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3b/3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b/3x3"
+  top: "bn_inception_3b/3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3b/3x3"
   top: "bn_inception_3b/3x3"
   name: "prelu1_bn_inception_3b/3x3"
@@ -1460,6 +1894,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3b/3x3x2_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b/3x3x2"
+  top: "bn_inception_3b/3x3x2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1544,6 +2005,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3b/3x3x2_1_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b/3x3x2_1"
+  top: "bn_inception_3b/3x3x2_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3b/3x3x2_1"
   top: "bn_inception_3b/3x3x2_1"
   name: "prelu1_bn_inception_3b/3x3x2_1"
@@ -1623,6 +2111,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3b/3x3x2_2_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b/3x3x2_2"
+  top: "bn_inception_3b/3x3x2_2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1717,6 +2232,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3b/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_3b/pool_proj"
+  top: "bn_inception_3b/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1815,6 +2357,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3c/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c/1x1"
+  top: "bn_inception_3c/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3c/1x1"
   top: "bn_inception_3c/1x1"
   name: "prelu1_bn_inception_3c"
@@ -1893,6 +2462,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3c_3x3reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c_3x3reduce"
+  top: "bn_inception_3c_3x3reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -1977,6 +2573,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3c/3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c/3x3"
+  top: "bn_inception_3c/3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3c/3x3"
   top: "bn_inception_3c/3x3"
   name: "prelu1_bn_inception_3c/3x3"
@@ -2054,6 +2677,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3c/3x3x2_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c/3x3x2"
+  top: "bn_inception_3c/3x3x2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -2138,6 +2788,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_3c/3x3x2_1_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c/3x3x2_1"
+  top: "bn_inception_3c/3x3x2_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_3c/3x3x2_1"
   top: "bn_inception_3c/3x3x2_1"
   name: "prelu1_bn_inception_3c/3x3x2_1"
@@ -2217,6 +2894,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3c/3x3x2_2_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c/3x3x2_2"
+  top: "bn_inception_3c/3x3x2_2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -2311,6 +3015,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_3c/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_3c/pool_proj"
+  top: "bn_inception_3c/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -2425,6 +3156,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4a/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/1x1"
+  top: "bn_inception_4a/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4a/1x1"
   top: "bn_inception_4a/1x1"
   name: "prelu1_bn_inception_4a"
@@ -2505,6 +3263,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4a_1x7x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a_1x7x2reduce"
+  top: "bn_inception_4a_1x7x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -2590,6 +3375,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4a/1x7_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/1x7"
+  top: "bn_inception_4a/1x7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4a/1x7"
   top: "bn_inception_4a/1x7"
   name: "prelu1_bn_inception_4a/1x7"
@@ -2670,6 +3482,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4a/7x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/7x1"
+  top: "bn_inception_4a/7x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -2757,6 +3596,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4a/1x7x4_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/1x7x4"
+  top: "bn_inception_4a/1x7x4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4a/1x7x4"
   top: "bn_inception_4a/1x7x4"
   name: "prelu1_bn_inception_4a/1x7x4"
@@ -2836,6 +3702,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4a/1x7xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/1x7xa"
+  top: "bn_inception_4a/1x7xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -2922,6 +3815,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4a/7x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/7x1xa"
+  top: "bn_inception_4a/7x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4a/7x1xa"
   top: "bn_inception_4a/7x1xa"
   name: "prelu1_bn_inception_4a/7x1xa"
@@ -3005,6 +3925,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4a/1x7xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/1x7xb"
+  top: "bn_inception_4a/1x7xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4a/1x7xb"
   top: "bn_inception_4a/1x7xb"
   name: "prelu1_bn_inception_4a/1x7xb"
@@ -3085,6 +4032,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4a/7x1xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/7x1xb"
+  top: "bn_inception_4a/7x1xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -3183,6 +4157,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4a/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_4a/pool_proj"
+  top: "bn_inception_4a/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4a/pool_proj"
   top: "bn_inception_4a/pool_proj"
   name: "prelu1_bn_inception_4a/pool"
@@ -3278,6 +4279,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4b/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/1x1"
+  top: "bn_inception_4b/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4b/1x1"
   top: "bn_inception_4b/1x1"
   name: "prelu1_bn_inception_4b"
@@ -3358,6 +4386,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4b_1x7x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b_1x7x2reduce"
+  top: "bn_inception_4b_1x7x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -3443,6 +4498,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4b/1x7_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/1x7"
+  top: "bn_inception_4b/1x7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4b/1x7"
   top: "bn_inception_4b/1x7"
   name: "prelu1_bn_inception_4b/1x7"
@@ -3523,6 +4605,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4b/7x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/7x1"
+  top: "bn_inception_4b/7x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -3610,6 +4719,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4b/1x7x4_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/1x7x4"
+  top: "bn_inception_4b/1x7x4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4b/1x7x4"
   top: "bn_inception_4b/1x7x4"
   name: "prelu1_bn_inception_4b/1x7x4"
@@ -3689,6 +4825,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4b/1x7xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/1x7xa"
+  top: "bn_inception_4b/1x7xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -3775,6 +4938,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4b/7x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/7x1xa"
+  top: "bn_inception_4b/7x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4b/7x1xa"
   top: "bn_inception_4b/7x1xa"
   name: "prelu1_bn_inception_4b/7x1xa"
@@ -3858,6 +5048,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4b/1x7xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/1x7xb"
+  top: "bn_inception_4b/1x7xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4b/1x7xb"
   top: "bn_inception_4b/1x7xb"
   name: "prelu1_bn_inception_4b/1x7xb"
@@ -3938,6 +5155,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4b/7x1xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/7x1xb"
+  top: "bn_inception_4b/7x1xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -4033,6 +5277,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4b/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_4b/pool_proj"
+  top: "bn_inception_4b/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -4132,6 +5403,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4c/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/1x1"
+  top: "bn_inception_4c/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4c/1x1"
   top: "bn_inception_4c/1x1"
   name: "prelu1_bn_inception_4c"
@@ -4212,6 +5510,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4c_1x7x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c_1x7x2reduce"
+  top: "bn_inception_4c_1x7x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -4297,6 +5622,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4c/1x7_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/1x7"
+  top: "bn_inception_4c/1x7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4c/1x7"
   top: "bn_inception_4c/1x7"
   name: "prelu1_bn_inception_4c/1x7"
@@ -4377,6 +5729,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4c/7x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/7x1"
+  top: "bn_inception_4c/7x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -4464,6 +5843,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4c/1x7x4_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/1x7x4"
+  top: "bn_inception_4c/1x7x4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4c/1x7x4"
   top: "bn_inception_4c/1x7x4"
   name: "prelu1_bn_inception_4c/1x7x4"
@@ -4543,6 +5949,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4c/1x7xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/1x7xa"
+  top: "bn_inception_4c/1x7xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -4629,6 +6062,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4c/7x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/7x1xa"
+  top: "bn_inception_4c/7x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4c/7x1xa"
   top: "bn_inception_4c/7x1xa"
   name: "prelu1_bn_inception_4c/7x1xa"
@@ -4712,6 +6172,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4c/1x7xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/1x7xb"
+  top: "bn_inception_4c/1x7xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4c/1x7xb"
   top: "bn_inception_4c/1x7xb"
   name: "prelu1_bn_inception_4c/1x7xb"
@@ -4792,6 +6279,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4c/7x1xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/7x1xb"
+  top: "bn_inception_4c/7x1xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -4890,6 +6404,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4c/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_4c/pool_proj"
+  top: "bn_inception_4c/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4c/pool_proj"
   top: "bn_inception_4c/pool_proj"
   name: "prelu1_bn_inception_4c/pool"
@@ -4982,6 +6523,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4d/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/1x1"
+  top: "bn_inception_4d/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4d/1x1"
   top: "bn_inception_4d/1x1"
   name: "prelu1_bn_inception_4d"
@@ -5062,6 +6630,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4d_1x7x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d_1x7x2reduce"
+  top: "bn_inception_4d_1x7x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -5147,6 +6742,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4d/1x7_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/1x7"
+  top: "bn_inception_4d/1x7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4d/1x7"
   top: "bn_inception_4d/1x7"
   name: "prelu1_bn_inception_4d/1x7"
@@ -5227,6 +6849,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4d/7x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/7x1"
+  top: "bn_inception_4d/7x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -5314,6 +6963,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4d/1x7x4_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/1x7x4"
+  top: "bn_inception_4d/1x7x4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4d/1x7x4"
   top: "bn_inception_4d/1x7x4"
   name: "prelu1_bn_inception_4d/1x7x4"
@@ -5393,6 +7069,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4d/1x7xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/1x7xa"
+  top: "bn_inception_4d/1x7xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -5479,6 +7182,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4d/7x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/7x1xa"
+  top: "bn_inception_4d/7x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4d/7x1xa"
   top: "bn_inception_4d/7x1xa"
   name: "prelu1_bn_inception_4d/7x1xa"
@@ -5562,6 +7292,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4d/1x7xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/1x7xb"
+  top: "bn_inception_4d/1x7xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4d/1x7xb"
   top: "bn_inception_4d/1x7xb"
   name: "prelu1_bn_inception_4d/1x7xb"
@@ -5642,6 +7399,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4d/7x1xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/7x1xb"
+  top: "bn_inception_4d/7x1xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -5740,6 +7524,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4d/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_4d/pool_proj"
+  top: "bn_inception_4d/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4d/pool_proj"
   top: "bn_inception_4d/pool_proj"
   name: "prelu1_bn_inception_4d/pool"
@@ -5831,6 +7642,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4e/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/1x1"
+  top: "bn_inception_4e/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4e/1x1"
   top: "bn_inception_4e/1x1"
   name: "prelu1_bn_inception_4e"
@@ -5911,6 +7749,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4e_1x7x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e_1x7x2reduce"
+  top: "bn_inception_4e_1x7x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -5996,6 +7861,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4e/1x7_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/1x7"
+  top: "bn_inception_4e/1x7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4e/1x7"
   top: "bn_inception_4e/1x7"
   name: "prelu1_bn_inception_4e/1x7"
@@ -6076,6 +7968,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4e/7x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/7x1"
+  top: "bn_inception_4e/7x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -6163,6 +8082,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4e/1x7x4_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/1x7x4"
+  top: "bn_inception_4e/1x7x4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4e/1x7x4"
   top: "bn_inception_4e/1x7x4"
   name: "prelu1_bn_inception_4e/1x7x4"
@@ -6242,6 +8188,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4e/1x7xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/1x7xa"
+  top: "bn_inception_4e/1x7xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -6328,6 +8301,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4e/7x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/7x1xa"
+  top: "bn_inception_4e/7x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4e/7x1xa"
   top: "bn_inception_4e/7x1xa"
   name: "prelu1_bn_inception_4e/7x1xa"
@@ -6411,6 +8411,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_4e/1x7xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/1x7xb"
+  top: "bn_inception_4e/1x7xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_4e/1x7xb"
   top: "bn_inception_4e/1x7xb"
   name: "prelu1_bn_inception_4e/1x7xb"
@@ -6491,6 +8518,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4e/7x1xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/7x1xb"
+  top: "bn_inception_4e/7x1xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -6586,6 +8640,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_4e/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_4e/pool_proj"
+  top: "bn_inception_4e/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -6704,6 +8785,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5a/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/1x1"
+  top: "bn_inception_5a/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5a/1x1"
   top: "bn_inception_5a/1x1"
   name: "prelu1_bn_inception_5a"
@@ -6784,6 +8892,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5a_1x3x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a_1x3x2reduce"
+  top: "bn_inception_5a_1x3x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -6869,6 +9004,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5a/1x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/1x3"
+  top: "bn_inception_5a/1x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5a/1x3"
   top: "bn_inception_5a/1x3"
   name: "prelu1_bn_inception_5a/1x3"
@@ -6949,6 +9111,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5a/3x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/3x1"
+  top: "bn_inception_5a/3x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7036,6 +9225,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5a/1x3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/1x3x3"
+  top: "bn_inception_5a/1x3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5a/1x3x3"
   top: "bn_inception_5a/1x3x3"
   name: "prelu1_bn_inception_5a/1x3x3"
@@ -7114,6 +9330,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5a/3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/3x3"
+  top: "bn_inception_5a/3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7200,6 +9443,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5a/3x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/3x1xa"
+  top: "bn_inception_5a/3x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5a/3x1xa"
   top: "bn_inception_5a/3x1xa"
   name: "prelu1_bn_inception_5a/3x1xa"
@@ -7280,6 +9550,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5a/1x3xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/1x3xb"
+  top: "bn_inception_5a/1x3xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7374,6 +9671,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5a/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_5a/pool_proj"
+  top: "bn_inception_5a/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7474,6 +9798,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5b/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/1x1"
+  top: "bn_inception_5b/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5b/1x1"
   top: "bn_inception_5b/1x1"
   name: "prelu1_bn_inception_5b"
@@ -7554,6 +9905,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5b_1x3x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b_1x3x2reduce"
+  top: "bn_inception_5b_1x3x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7639,6 +10017,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5b/1x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/1x3"
+  top: "bn_inception_5b/1x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5b/1x3"
   top: "bn_inception_5b/1x3"
   name: "prelu1_bn_inception_5b/1x3"
@@ -7719,6 +10124,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5b/3x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/3x1"
+  top: "bn_inception_5b/3x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7806,6 +10238,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5b/1x3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/1x3x3"
+  top: "bn_inception_5b/1x3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5b/1x3x3"
   top: "bn_inception_5b/1x3x3"
   name: "prelu1_bn_inception_5b/1x3x3"
@@ -7884,6 +10343,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5b/3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/3x3"
+  top: "bn_inception_5b/3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -7970,6 +10456,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5b/3x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/3x1xa"
+  top: "bn_inception_5b/3x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5b/3x1xa"
   top: "bn_inception_5b/3x1xa"
   name: "prelu1_bn_inception_5b/3x1xa"
@@ -8050,6 +10563,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5b/1x3xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/1x3xb"
+  top: "bn_inception_5b/1x3xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -8144,6 +10684,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5b/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_5b/pool_proj"
+  top: "bn_inception_5b/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -8244,6 +10811,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5c/1x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/1x1"
+  top: "bn_inception_5c/1x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5c/1x1"
   top: "bn_inception_5c/1x1"
   name: "prelu1_bn_inception_5c"
@@ -8324,6 +10918,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5c_1x3x2reduce_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c_1x3x2reduce"
+  top: "bn_inception_5c_1x3x2reduce"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -8409,6 +11030,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5c/1x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/1x3"
+  top: "bn_inception_5c/1x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5c/1x3"
   top: "bn_inception_5c/1x3"
   name: "prelu1_bn_inception_5c/1x3"
@@ -8489,6 +11137,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5c/3x1_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/3x1"
+  top: "bn_inception_5c/3x1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -8576,6 +11251,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5c/1x3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/1x3x3"
+  top: "bn_inception_5c/1x3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5c/1x3x3"
   top: "bn_inception_5c/1x3x3"
   name: "prelu1_bn_inception_5c/1x3x3"
@@ -8654,6 +11356,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5c/3x3_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/3x3"
+  top: "bn_inception_5c/3x3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -8740,6 +11469,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5c/3x1xa_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/3x1xa"
+  top: "bn_inception_5c/3x1xa"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5c/3x1xa"
   top: "bn_inception_5c/3x1xa"
   name: "prelu1_bn_inception_5c/3x1xa"
@@ -8820,6 +11576,33 @@ layer {
   }
    include {
     phase: TEST
+  }
+}
+layer {
+  name: "bn_inception_5c/1x3xb_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/1x3xb"
+  top: "bn_inception_5c/1x3xb"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
   }
 }
 layer {
@@ -8917,6 +11700,33 @@ layer {
   }
 }
 layer {
+  name: "bn_inception_5c/pool_proj_scale"
+  type: "Scale"
+  bottom: "bn_inception_5c/pool_proj"
+  top: "bn_inception_5c/pool_proj"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  scale_param {
+    axis: 1
+    num_axes: 1
+    filler {
+      type: "constant"
+      value: 1.0000001
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    bias_term: true
+  }
+}
+layer {
   bottom: "bn_inception_5c/pool_proj"
   top: "bn_inception_5c/pool_proj"
   name: "prelu1_bn_inception_5c/pool"
@@ -8947,8 +11757,8 @@ layer {
   bottom: "inception_5c/output"
   top: "inception_5_end/pool"
   pooling_param {
-    pool: MAX
-    kernel_size: 9
+    pool: AVE
+    kernel_size: 7
     stride: 1
     pad: 1
   }
